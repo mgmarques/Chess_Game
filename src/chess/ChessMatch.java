@@ -1,8 +1,10 @@
 package chess;
 
 import board.Board;
+import board.Piece;
 import board.Position;
 import chess.enums.Color;
+import chess.exceptions.ChessException;
 import chess.pieces.Bishop;
 import chess.pieces.King;
 import chess.pieces.Knight;
@@ -36,30 +38,58 @@ public class ChessMatch {
 		return mat;
 	}
 	
+	private void validateSourcePosition(Position position) {
+		if (!board.therIsAPiece(position)) {
+			throw new ChessException("There is no piece on the source position");
+		}
+	}
+	
+	private Piece makeMove(Position source, Position target) {
+	
+		Piece play = board.removePiece(source);
+		Piece capturedPiece = board.removePiece(target);
+		board.placePiece(play, target);
+		return capturedPiece; 
+	}
+	
+	public ChessPiece performChessMovr(ChessPosition sourcePosition, ChessPosition targetPosition) {
+		Position source = sourcePosition.toPosition();
+		Position target = targetPosition.toPosition();
+		validateSourcePosition(source);
+		Piece capturedPiece = makeMove(source, target);
+		
+		return (ChessPiece) capturedPiece;
+		
+	}
+	
+	private void placeNewPiece(char column, int row, ChessPiece piece) {
+		board.placePiece(piece, new ChessPosition(column, row).toPosition());
+	}
+	
 	private void initialSetup() {
 		Color color = Color.BLACK;
 		
-		board.placePiece(new Rook(board, color), new Position(0, 0));
-		board.placePiece(new Rook(board, color), new Position(0, 7));
-		board.placePiece(new Knight(board, color), new Position(0, 1));
-		board.placePiece(new Knight(board, color), new Position(0, 6));
-		board.placePiece(new Bishop(board, color), new Position(0, 2));
-		board.placePiece(new Bishop(board, color), new Position(0, 5));
-		board.placePiece(new Queen(board, color), new Position(0, 3));
-		board.placePiece(new King(board, color), new Position(0, 4));
-		for (int c = 0; c < board.getColumns(); c++) {
-			board.placePiece(new Pawn(board, color), new Position(1, c));
+		placeNewPiece('a', 8, new Rook(board, color));
+		placeNewPiece('h', 8, new Rook(board, color));
+		placeNewPiece('b', 8, new Knight(board, color));
+		placeNewPiece('g', 8, new Knight(board, color));
+		placeNewPiece('c', 8, new Bishop(board, color));
+		placeNewPiece('f', 8, new Bishop(board, color));
+		placeNewPiece('d', 8, new Queen(board, color));
+		placeNewPiece('e', 8, new King(board, color));
+		for (char c = 'a'; c < 'i'; c++) {
+			placeNewPiece(c, 7, new Pawn(board, color));
 		}
 
 		color = Color.WHITE;
-		board.placePiece(new Rook(board, color), new Position(7, 0));
-		board.placePiece(new Rook(board, color), new Position(7, 7));
-		board.placePiece(new Knight(board, color), new Position(7, 1));
-		board.placePiece(new Knight(board, color), new Position(7, 6));
-		board.placePiece(new Bishop(board, color), new Position(7, 2));
-		board.placePiece(new Bishop(board, color), new Position(7, 5));
-		board.placePiece(new Queen(board, color), new Position(7, 3));
-		board.placePiece(new King(board, color), new Position(7, 4));
+		placeNewPiece('a', 1, new Rook(board, color));
+		placeNewPiece('h', 1, new Rook(board, color));
+		placeNewPiece('b', 1, new Knight(board, color));
+		placeNewPiece('g', 1, new Knight(board, color));
+		placeNewPiece('c', 1, new Bishop(board, color));
+		placeNewPiece('f', 1, new Bishop(board, color));
+		placeNewPiece('d', 1, new Queen(board, color));
+		placeNewPiece('e', 1, new King(board, color));
 		for (int c = 0; c < board.getColumns(); c++) {
 			board.placePiece(new Pawn(board, color), new Position(6, c));
 		}

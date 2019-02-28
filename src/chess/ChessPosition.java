@@ -1,16 +1,17 @@
 package chess;
 
 import board.Position;
+import chess.exceptions.ChessException;
 
 public class ChessPosition {
 	
 	private char column;
-	private Integer row;
-	
-	public ChessPosition() {
-	}
+	private int row;
 
-	public ChessPosition(char column, Integer row) {
+	public ChessPosition(char column, Integer row) throws ChessException {
+		if (column < 'a' || column > 'h' || row < 1 || row > 8) {
+			throw new ChessException("Error instantiating ChessPosition: valid values from a1 to h8.");
+		}
 		this.column = column;
 		this.row = row;
 	}
@@ -24,22 +25,16 @@ public class ChessPosition {
 	}
 	
 	protected Position toPosition() {
-		int col = (int) column;
-		Position position = new Position(row, col);
-		
-		return position;
+		return new Position(8 - row, column - 'a');
 	}
 
-	protected ChessPosition fromPosition(Position position) {
-		char col = 'A'; // position.getColumn()
-		ChessPosition chessPosition = new ChessPosition(col, row);
-		
-		return chessPosition;
+	protected ChessPosition fromPosition(Position position) throws ChessException {
+		return new ChessPosition((char) ('a' + position.getColumn()), 8 - position.getRow());
 	}
 
 	@Override
 	public String toString() {
-		return row + ", " + column;
+		return "" + column + row;
 	}
 	
 }
