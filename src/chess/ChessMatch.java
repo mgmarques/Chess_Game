@@ -63,14 +63,26 @@ public class ChessMatch {
 	private Piece makeMove(Position source, Position target) {
 
 		char piece = board.piece(source).toString().charAt(0);
-		// Check if is a Capture "en passant"
 		Piece play = board.removePiece(source);
 		Piece capturedPiece = board.removePiece(target);
+		// Check if is a Capture from a "en passant" move
 		if (piece == 'P' && !board.therIsAPiece(source) && (source.getColumn() != target.getColumn())) {
 			Position enPassat = new Position(source.getRow(), target.getColumn());
 			capturedPiece = board.removePiece(enPassat);
 		}
 		board.placePiece(play, target);
+		// Check if a pawn get promoted
+		ChessPiece p = (ChessPiece) board.piece(target);
+		Color color = p.getColor();
+		int row = target.getRow();
+		int col = target.getColumn();
+		if (piece == 'P') {
+			if ((color == Color.BLACK && row == 7) || 
+				(color == Color.WHITE && row == 0)	) {
+				 board.removePiece(target);
+				 board.placePiece(new Queen(board, color), new Position(row, col));
+			}
+		}
 		return capturedPiece;
 
 	}
