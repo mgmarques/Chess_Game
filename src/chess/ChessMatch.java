@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import board.Board;
 import board.Piece;
 import board.Position;
@@ -18,13 +21,28 @@ public class ChessMatch {
 
 	private int turn;
 	private Color currentPlayer;
+	
+	private List<Piece> piecesOnTheBoard = new ArrayList<>();
+	private List<Piece> capturedPieces = new ArrayList<>();
+	
 	private boolean check;
 	private boolean checkMate;
 	private ChessPiece enPassantVulnerable;
 	private ChessPiece promoted;
+	
+	public int getTurn() {
+		return turn;
+	}
 
+	public Color getCurrentPlayer() {
+		return currentPlayer;
+	}
+	
+	
 	public ChessMatch() {
 		board = new Board(8, 8);
+		turn = 1;
+		currentPlayer = Color.WHITE;
 		initialSetup();
 	}
 
@@ -42,6 +60,9 @@ public class ChessMatch {
 		if (!board.therIsAPiece(position)) {
 			throw new ChessException("There is no piece on the source position");
 		}
+		if (currentPlayer !=  ((ChessPiece)board.piece(position)).getColor()) {
+			throw new ChessException("The chosen piece is not yours");
+		}
 		if (!board.piece(position).isTherAnyPossibleMove()) {
 			throw new ChessException("There is no possible moves for the chosen piece");
 		}
@@ -54,6 +75,11 @@ public class ChessMatch {
 		}
 	}
 
+	private void nextTurn() {
+		turn++;
+		currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
+	}
+	
 	public boolean[][] possibleMoves(ChessPosition source) {
 		Position position = source.toPosition();
 		validateSourcePosition(position);
@@ -63,13 +89,17 @@ public class ChessMatch {
 	private Piece makeMove(Position source, Position target) {
 
 		char piece = board.piece(source).toString().charAt(0);
-		Piece play = board.removePiece(source);
-		Piece capturedPiece = board.removePiece(target);
+		Piece play = board.piece(source);
+		Piece capturedPiece = board.piece(target);
 		// Check if is a Capture from a "en passant" move
-		if (piece == 'P' && !board.therIsAPiece(source) && (source.getColumn() != target.getColumn())) {
+		if (piece == 'P' && !board.therIsAPiece(target) && (source.getColumn() != target.getColumn())) {
 			Position enPassat = new Position(source.getRow(), target.getColumn());
 			capturedPiece = board.removePiece(enPassat);
 		}
+		else {
+			capturedPiece = board.removePiece(target);
+		}
+		play = board.removePiece(source);
 		board.placePiece(play, target);
 		// Check if a pawn get promoted
 		ChessPiece p = (ChessPiece) board.piece(target);
@@ -77,11 +107,16 @@ public class ChessMatch {
 		int row = target.getRow();
 		int col = target.getColumn();
 		if (piece == 'P') {
-			if ((color == Color.BLACK && row == 7) || 
-				(color == Color.WHITE && row == 0)	) {
-				 board.removePiece(target);
-				 board.placePiece(new Queen(board, color), new Position(row, col));
+			if ((color == Color.BLACK && row == 7) || (color == Color.WHITE && row == 0)) {
+				// Promote Pawn to Queen
+				board.removePiece(target);
+				board.placePiece(new Queen(board, color), new Position(row, col));
 			}
+		}
+		
+		if (capturedPiece != null) {
+			piecesOnTheBoard.remove(capturedPiece);
+			capturedPieces.add(capturedPiece);
 		}
 		return capturedPiece;
 
@@ -94,12 +129,14 @@ public class ChessMatch {
 		validateTargetPosition(source, target);
 		Piece capturedPiece = makeMove(source, target);
 
+		nextTurn();
 		return (ChessPiece) capturedPiece;
 
 	}
 
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
+		piecesOnTheBoard.add(piece);
 	}
 
 	private void initialSetup() {

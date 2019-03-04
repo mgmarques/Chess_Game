@@ -2,9 +2,9 @@ package board;
 
 public abstract class Piece {
 
-	protected  Position position;
+	protected Position position;
 	private Board board;
-	
+
 	public Piece() {
 	}
 
@@ -15,14 +15,14 @@ public abstract class Piece {
 	protected Board getBoard() {
 		return board;
 	}
-	
+
 	public abstract boolean[][] possibleMoves();
-	
+
 	public boolean possibleMove(Position position) {
 		// hook method on possibleMovies(), like on the template method
 		return possibleMoves()[position.getRow()][position.getColumn()];
 	}
-	
+
 	public boolean isTherAnyPossibleMove() {
 		boolean possibleMoves[][] = possibleMoves();
 		for (int r = 0; r < possibleMoves.length; r++) {

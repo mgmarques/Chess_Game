@@ -4,7 +4,7 @@ import board.Position;
 import chess.exceptions.ChessException;
 
 public class ChessPosition {
-	
+
 	private char column;
 	private int row;
 
@@ -23,12 +23,12 @@ public class ChessPosition {
 	public Integer getRow() {
 		return row;
 	}
-	
+
 	protected Position toPosition() {
 		return new Position(8 - row, column - 'a');
 	}
 
-	protected ChessPosition fromPosition(Position position) throws ChessException {
+	protected static ChessPosition fromPosition(Position position) throws ChessException {
 		return new ChessPosition((char) ('a' + position.getColumn()), 8 - position.getRow());
 	}
 
@@ -36,5 +36,5 @@ public class ChessPosition {
 	public String toString() {
 		return "" + column + row;
 	}
-	
+
 }

@@ -16,55 +16,54 @@ public class King extends ChessPiece {
 		return "K";
 	}
 
-	
 	@Override
 	public boolean[][] possibleMoves() {
 		boolean[][] ChessBoard = new boolean[getBoard().getRows()][getBoard().getColumns()];
-		
+
 		Position p = new Position(0, 0);
-		
-		//Above move
+
+		// Above move
 		p.setValues(position.getRow() - 1, position.getColumn());
 		if (getBoard().positionExists(p) && (!getBoard().therIsAPiece(p) || isTherOpponentPiece(p))) {
 			ChessBoard[p.getRow()][p.getColumn()] = true;
 		}
-		//Below move
+		// Below move
 		p.setValues(position.getRow() + 1, position.getColumn());
 		if (getBoard().positionExists(p) && (!getBoard().therIsAPiece(p) || isTherOpponentPiece(p))) {
 			ChessBoard[p.getRow()][p.getColumn()] = true;
 		}
-		
-		//Left move
+
+		// Left move
 		p.setValues(position.getRow(), position.getColumn() - 1);
 		if (getBoard().positionExists(p) && (!getBoard().therIsAPiece(p) || isTherOpponentPiece(p))) {
 			ChessBoard[p.getRow()][p.getColumn()] = true;
 		}
 
-		//Up-Left move
+		// Up-Left move
 		p.setValues(position.getRow() - 1, position.getColumn() - 1);
 		if (getBoard().positionExists(p) && (!getBoard().therIsAPiece(p) || isTherOpponentPiece(p))) {
 			ChessBoard[p.getRow()][p.getColumn()] = true;
 		}
 
-		//Down-Left move
+		// Down-Left move
 		p.setValues(position.getRow() + 1, position.getColumn() - 1);
 		if (getBoard().positionExists(p) && (!getBoard().therIsAPiece(p) || isTherOpponentPiece(p))) {
 			ChessBoard[p.getRow()][p.getColumn()] = true;
 		}
 
-		//Right move
+		// Right move
 		p.setValues(position.getRow(), position.getColumn() + 1);
 		if (getBoard().positionExists(p) && (!getBoard().therIsAPiece(p) || isTherOpponentPiece(p))) {
 			ChessBoard[p.getRow()][p.getColumn()] = true;
 		}
 
-		//Up-Right move
+		// Up-Right move
 		p.setValues(position.getRow() - 1, position.getColumn() + 1);
 		if (getBoard().positionExists(p) && (!getBoard().therIsAPiece(p) || isTherOpponentPiece(p))) {
 			ChessBoard[p.getRow()][p.getColumn()] = true;
 		}
-		
-		//Down-Right move
+
+		// Down-Right move
 		p.setValues(position.getRow() + 1, position.getColumn() + 1);
 		if (getBoard().positionExists(p) && (!getBoard().therIsAPiece(p) || isTherOpponentPiece(p))) {
 			ChessBoard[p.getRow()][p.getColumn()] = true;
