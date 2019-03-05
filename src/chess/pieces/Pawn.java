@@ -73,15 +73,20 @@ public class Pawn extends ChessPiece {
 			Position opponet = new Position(0, 0);
 			opponet.setValues(position.getRow(), position.getColumn() - 1);
 			p.setValues(position.getRow() + (1 * direction), position.getColumn() - 1);
-			if (isTherOpponentPiece(opponet) && getBoard().positionExists(p) && !getBoard().therIsAPiece(p)) {
-				ChessBoard[p.getRow()][p.getColumn()] = true;
+			if (getBoard().positionExists(opponet) && getBoard().positionExists(p)) {
+				if (isTherOpponentPiece(opponet) && !getBoard().therIsAPiece(p)) {
+					ChessBoard[p.getRow()][p.getColumn()] = true;
+				}				
 			}
+
 
 			// enPassat Capture - Right
 			opponet.setValues(position.getRow(), position.getColumn() + 1);
 			p.setValues(position.getRow() + (1 * direction), position.getColumn() + 1);
-			if (isTherOpponentPiece(opponet) && getBoard().positionExists(p) && !getBoard().therIsAPiece(p)) {
-				ChessBoard[p.getRow()][p.getColumn()] = true;
+			if (getBoard().positionExists(opponet) && getBoard().positionExists(p)) {
+				if (isTherOpponentPiece(opponet) && !getBoard().therIsAPiece(p)) {
+					ChessBoard[p.getRow()][p.getColumn()] = true;
+				}				
 			}
 
 		}
