@@ -47,6 +47,10 @@ public class ChessMatch {
 		return checkMate;
 	}
 
+	public ChessPiece getEnPassantVulnerable() {
+		return enPassantVulnerable;
+	}
+	
 	public ChessMatch() {
 		board = new Board(8, 8);
 		turn = 1;
@@ -157,7 +161,13 @@ public class ChessMatch {
 		board.placePiece(original, source);
 
 		if (capturedPiece != null) {
+			if (original instanceof Pawn && capturedPiece == enPassantVulnerable) {
+				Position enPassat = new Position(source.getRow(), target.getColumn());
+				board.placePiece(capturedPiece, enPassat);
+				enPassantVulnerable = (ChessPiece) capturedPiece;			
+			} else {
 			board.placePiece(capturedPiece, target);
+			}
 			capturedPieces.remove(capturedPiece);
 			piecesOnTheBoard.add(capturedPiece);
 		}
@@ -193,6 +203,9 @@ public class ChessMatch {
 			undoMove(source, target, capturedPiece);
 			throw new ChessException("Yuo can't put your King on check");
 		}
+		
+		ChessPiece movedPiece = (ChessPiece)board.piece(target);
+		
 
 		check = (testCheck(opponet(currentPlayer))) ? true : false;
 
@@ -201,6 +214,15 @@ public class ChessMatch {
 		} else {
 			nextTurn();
 		}
+		
+		//Special Move En Passant: Check pawn vulnerability
+		if (movedPiece instanceof Pawn && Math.abs(target.getRow() - source.getRow()) ==  2) {
+			enPassantVulnerable = movedPiece;
+		}
+		else {
+			enPassantVulnerable = null;
+		}
+		
 		return (ChessPiece) capturedPiece;
 	}
 
@@ -268,9 +290,7 @@ public class ChessMatch {
 		placeNewPiece('e', 1, new King(board, Color.WHITE, this));
 		placeNewPiece('b', 8, new Rook(board, Color.BLACK));
 		placeNewPiece('a', 8, new King(board, Color.BLACK, this));
-		
-	    */
-	
+			
 		// Test Special Move RookCateling	
 		placeNewPiece('a', 1, new Rook(board, Color.WHITE));
 		placeNewPiece('h', 1, new Rook(board, Color.WHITE));
@@ -279,7 +299,8 @@ public class ChessMatch {
 		placeNewPiece('h', 8, new Rook(board, Color.BLACK));
 		placeNewPiece('e', 8, new King(board, Color.BLACK, this));
 
-		/*
+		*/
+		
 		Color color = Color.BLACK;
 
 		placeNewPiece('a', 8, new Rook(board, color));
@@ -291,7 +312,7 @@ public class ChessMatch {
 		placeNewPiece('d', 8, new Queen(board, color));
 		placeNewPiece('e', 8, new King(board, color, this));
 		for (char c = 'a'; c < 'i'; c++) {
-			placeNewPiece(c, 7, new Pawn(board, color));
+			placeNewPiece(c, 7, new Pawn(board, color, this));
 		}
 
 		color = Color.WHITE;
@@ -304,8 +325,8 @@ public class ChessMatch {
 		placeNewPiece('d', 1, new Queen(board, color));
 		placeNewPiece('e', 1, new King(board, color, this));
 		for (int c = 0; c < board.getColumns(); c++) {
-			board.placePiece(new Pawn(board, color), new Position(6, c));
+			board.placePiece(new Pawn(board, color, this), new Position(6, c));
 		}
-		*/
+
 	}
 }

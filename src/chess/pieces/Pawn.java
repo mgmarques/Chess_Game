@@ -2,13 +2,17 @@ package chess.pieces;
 
 import board.Board;
 import board.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.enums.Color;
 
 public class Pawn extends ChessPiece {
 
-	public Pawn(Board board, Color color) {
+	private ChessMatch chessMatch;
+
+	public Pawn(Board board, Color color, ChessMatch chessMatch) {
 		super(board, color);
+		this.chessMatch = chessMatch;
 	}
 
 	@Override
@@ -68,21 +72,16 @@ public class Pawn extends ChessPiece {
 			// enPassat Capture - Left
 			Position opponet = new Position(0, 0);
 			opponet.setValues(position.getRow(), position.getColumn() - 1);
-			p.setValues(position.getRow() + (1 * direction), position.getColumn() - 1);
-			if (getBoard().positionExists(opponet) && getBoard().positionExists(p)) {
-				if (isTherOpponentPiece(opponet) && !getBoard().therIsAPiece(p)) {
-					ChessBoard[p.getRow()][p.getColumn()] = true;
-				}				
+			if (getBoard().positionExists(opponet) && isTherOpponentPiece(opponet)
+					&& getBoard().piece(opponet) == chessMatch.getEnPassantVulnerable()) {
+				ChessBoard[opponet.getRow() + (1 * direction)][opponet.getColumn()] = true;
 			}
-
 
 			// enPassat Capture - Right
 			opponet.setValues(position.getRow(), position.getColumn() + 1);
-			p.setValues(position.getRow() + (1 * direction), position.getColumn() + 1);
-			if (getBoard().positionExists(opponet) && getBoard().positionExists(p)) {
-				if (isTherOpponentPiece(opponet) && !getBoard().therIsAPiece(p)) {
-					ChessBoard[p.getRow()][p.getColumn()] = true;
-				}				
+			if (getBoard().positionExists(opponet) && isTherOpponentPiece(opponet)
+					&& getBoard().piece(opponet) == chessMatch.getEnPassantVulnerable()) {
+				ChessBoard[opponet.getRow() + (1 * direction)][opponet.getColumn()] = true;
 			}
 
 		}
