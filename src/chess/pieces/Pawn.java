@@ -22,14 +22,10 @@ public class Pawn extends ChessPiece {
 
 		int direction = -1;
 		int rowPawn = position.getRow();
-		boolean firstMove = false;
 
 		if (super.getColor() == Color.BLACK) {
 			direction = 1;
-			if (rowPawn == 1)
-				firstMove = true;
-		} else if (rowPawn == 6)
-			firstMove = true;
+		}
 
 		Position p = new Position(0, 0);
 
@@ -37,7 +33,7 @@ public class Pawn extends ChessPiece {
 		p.setValues(position.getRow() + (1 * direction), position.getColumn());
 		if (getBoard().positionExists(p) && (!getBoard().therIsAPiece(p) || isTherOpponentPiece(p))) {
 			ChessBoard[p.getRow()][p.getColumn()] = true;
-			if (firstMove == true && !isTherOpponentPiece(p)) {
+			if (getMoveCount() == 0 && !isTherOpponentPiece(p)) {
 				p.setValues(position.getRow() + (2 * direction), position.getColumn());
 				if (getBoard().positionExists(p) && (!getBoard().therIsAPiece(p) || isTherOpponentPiece(p))) {
 					ChessBoard[p.getRow()][p.getColumn()] = true;

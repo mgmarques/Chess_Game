@@ -11,6 +11,10 @@ public class Queen extends ChessPiece {
 		super(board, color);
 	}
 
+	public Queen(Board board, Color color, int moveCount) {
+		super(board, color, moveCount);
+	}
+
 	@Override
 	public String toString() {
 		return "Q";
