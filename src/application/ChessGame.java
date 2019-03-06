@@ -30,7 +30,7 @@ public class ChessGame {
 		ChessMatch chessMatch = new ChessMatch();
 		List<ChessPiece> captured = new ArrayList<>();
 
-		while (true) {
+		while (!chessMatch.getCheckMate()) {
 			try {
 				UI.printMatch(chessMatch, captured);
 				System.out.println();
@@ -55,7 +55,7 @@ public class ChessGame {
 				sc.nextLine();
 			}
 		}
-
+		UI.printMatch(chessMatch, captured);
 	}
 
 }
